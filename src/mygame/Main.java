@@ -1,14 +1,17 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.font.BitmapText;
+import com.jme3.asset.plugins.ZipLocator;
+import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 
 /**
  * test
@@ -17,6 +20,9 @@ import com.jme3.scene.shape.Box;
  */
 public class Main extends SimpleApplication {
 
+    private Spatial player;
+    private InputListener inputListener = new InputListener();
+
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -24,63 +30,45 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        //Creates the teapot geometry and loads the model
-        Spatial teapot = assetManager.loadModel("Models/Teapot/Teapot.obj");
-        //Creates the material for the teapot
-        Material mat_default = new Material(
-                assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        //Assigns the material to the teapot
-        teapot.setMaterial(mat_default);
-        //Adds the teapot to the world
-        rootNode.attachChild(teapot);
-
-        // Create a wall with a simple texture from test_data
-        
-        //Creates a box shape
-        Box box = new Box(2.5f, 2.5f, 1.0f);
-        //Creates the wall's geometry with the box as a shape
-        Spatial wall = new Geometry("Box", box);
-        //Creates the material for the wall
-        Material mat_brick = new Material(
-                assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        //Sets the texture of the material
-        mat_brick.setTexture("ColorMap",
-                assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
-        //Assigns the material to the wall
-        wall.setMaterial(mat_brick);
-        //Sets the wall's position
-        wall.setLocalTranslation(2.0f, -2.5f, 0.0f);
-        //Adds the wall to the world
-        rootNode.attachChild(wall);
-
-        // Display a line of text with a default font
-        guiNode.detachAllChildren();
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        BitmapText helloText = new BitmapText(guiFont, false);
-        helloText.setSize(guiFont.getCharSet().getRenderedSize());
-        helloText.setText("Hello World");
-        helloText.setLocalTranslation(300, helloText.getLineHeight(), 0);
-        guiNode.attachChild(helloText);
-
+        assetManager.registerLocator("town.zip", ZipLocator.class);
+        Spatial gameLevel = assetManager.loadModel("main.scene");
+        gameLevel.setLocalTranslation(0, -5.2f, 0);
+        gameLevel.setLocalScale(2);
+        rootNode.attachChild(gameLevel);
         // Load a model from test_data (OgreXML + material + texture)
-        
-        //Creates the geometry of the ninja
-        Spatial ninja = assetManager.loadModel("Models/Ninja/Ninja.mesh.xml");
-        //Sets the ninja's position, rotation, and scale
-        ninja.scale(0.05f, 0.05f, 0.05f);
-        ninja.rotate(0.0f, -3.0f, 0.0f);
-        ninja.setLocalTranslation(0.0f, -5.0f, -2.0f);
-        //Adds the ninja to the world
-        rootNode.attachChild(ninja);
-        
-        
+
+        //Creates the geometry of the player
+        player = assetManager.loadModel("Models/Ninja/Ninja.mesh.xml");
+        //Sets the player's position, rotation, and scale
+        player.scale(0.05f, 0.05f, 0.05f);
+        player.rotate(0.0f, -3.0f, 0.0f);
+        player.setLocalTranslation(0, 0, 0);
+        //Adds the player to the world
+        rootNode.attachChild(player);
+
+
         // You must add a light to make the model visible
-        
+
         //Creates a new light
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(0.1f, -0.7f, 1.0f));
+        sun.setDirection(new Vector3f(0.1f, -0.7f, -1.0f));
         //Adds the light to the world
         rootNode.addLight(sun);
+
+        flyCam.setMoveSpeed(50);
+        initKeys();
+    }
+
+    private void initKeys() {
+        // You can map one or several inputs to one named action
+        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
+        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
+        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("Back", new KeyTrigger(KeyInput.KEY_S));
+        // Add the names to the action listener.
+        inputManager.addListener(inputListener, "Pause");
+        inputManager.addListener(inputListener, "Left", "Right", "Rotate");
     }
 
     @Override
@@ -91,5 +79,18 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
+    }
+
+    private class InputListener implements ActionListener, AnalogListener {
+
+        public void onAction(String name, boolean isPressed, float tpf) {
+            if (name.equals("Pause") && !isPressed) {
+                paused = !paused;
+            }
+        }
+
+        public void onAnalog(String name, float value, float tpf) {
+            //flyCam.
+        }
     }
 }
