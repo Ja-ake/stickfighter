@@ -1,0 +1,39 @@
+<scene	exported_by="Rory"	formatVersion="1.0.1"	previous_export_time="1402602174.992413"	export_time="1402604049.756"	>
+	<nodes	>
+		<node	name="Arms"	>
+			<position	y="0.000000"	x="0.000000"	z="-0.000000"	/>
+			<rotation	qy="0.000000"	qx="0.000000"	qz="-0.000000"	qw="1.000000"	/>
+			<scale	y="1.000000"	x="1.000000"	z="1.000000"	/>
+			<game	>
+				<sensors	/>
+				<actuators	/>
+			</game>
+			<node	name="Head"	>
+				<position	y="6.158889"	x="0.000000"	z="0.403426"	/>
+				<rotation	qy="0.000000"	qx="0.101379"	qz="-0.000000"	qw="0.994848"	/>
+				<scale	y="1.000000"	x="1.000000"	z="1.000000"	/>
+				<game	>
+					<sensors	/>
+					<actuators	/>
+				</game>
+				<entity	anisotropic_friction="False"	lock_trans_y="False"	damping_trans="0.03999999910593033"	damping_rot="0.10000000149011612"	inertia_tensor="0.4000000059604645"	actor="False"	velocity_min="0.0"	lock_trans_z="False"	physics_type="STATIC"	lock_trans_x="False"	meshFile="HeadMesh.mesh"	friction_y="1.0"	friction_x="1.0"	friction_z="1.0"	velocity_max="0.0"	ghost="False"	name="HeadMesh"	mass_radius="1.0"	mass="1.0"	lock_rot_x="False"	lock_rot_y="False"	lock_rot_z="False"	/>
+			</node>
+			<node	name="Stick"	>
+				<position	y="0.000000"	x="0.000000"	z="-0.000000"	/>
+				<rotation	qy="0.000000"	qx="0.000000"	qz="-0.000000"	qw="1.000000"	/>
+				<scale	y="1.000000"	x="1.000000"	z="1.000000"	/>
+				<game	>
+					<sensors	/>
+					<actuators	/>
+				</game>
+				<entity	anisotropic_friction="False"	lock_trans_y="False"	damping_trans="0.03999999910593033"	damping_rot="0.10000000149011612"	inertia_tensor="0.4000000059604645"	actor="False"	velocity_min="0.0"	lock_trans_z="False"	physics_type="STATIC"	lock_trans_x="False"	meshFile="StickMesh.mesh"	friction_y="1.0"	friction_x="1.0"	friction_z="1.0"	velocity_max="0.0"	ghost="False"	name="StickMesh"	mass_radius="1.0"	mass="1.0"	lock_rot_x="False"	lock_rot_y="False"	lock_rot_z="False"	/>
+			</node>
+		</node>
+	</nodes>
+	<externals	>
+		<item	type="material"	>
+			<file	name="C:\Users\Rory\Desktop\Programs\Current Projects\stickfighter\assets\Material__stickflat7.blend.material"	/>
+		</item>
+	</externals>
+	<environment	/>
+</scene>
