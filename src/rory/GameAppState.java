@@ -2,28 +2,25 @@ package rory;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.bullet.BulletAppState;
 
-public class GameAppState extends AbstractAppState {
+public class GameAppState extends BulletAppState {
 
-    private AppStateManager stateManager;
-    private SimpleApplication app;
-    
-
-    @Override
-    public void cleanup() {
-    }
+    private Room room;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.stateManager = stateManager;
-        this.app = (SimpleApplication) app;
+        room = new Room(this);
     }
 
     public SimpleApplication getApp() {
-        return app;
+        return (SimpleApplication) app;
+    }
+
+    public Room getRoom() {
+        return room;
     }
 
     public AppStateManager getStateManager() {
@@ -31,7 +28,8 @@ public class GameAppState extends AbstractAppState {
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
+    public void update(float tpf) {
+        super.update(tpf);
+        room.update(tpf);
     }
 }

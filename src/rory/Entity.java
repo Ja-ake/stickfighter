@@ -1,6 +1,7 @@
 package rory;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
@@ -10,9 +11,9 @@ public abstract class Entity {
     protected Vector3f position;
     protected Vector3f velocity;
     protected Vector3f gravity;
-    protected CollisionShape physicsShape;
-    protected Spatial spatial;
     protected boolean affectedByGravity;
+    protected Spatial spatial;
+    protected RigidBodyControl physicsControl;
 
     public Entity(GameAppState appState, Vector3f position) {
         this.appState = appState;
@@ -20,8 +21,11 @@ public abstract class Entity {
         velocity = new Vector3f(0, 0, 0); // xdir, ydir, zdir (mag=speed)
         gravity = new Vector3f(0, -.5f, 0);
 
-        physicsShape = initialCollisionShape();
         spatial = initialSpatial();
+        appState.getApp().getRootNode().attachChild(spatial);
+        physicsControl = new RigidBodyControl(initialCollisionShape(), 1);
+        appState.getPhysicsSpace().add(physicsControl);
+
     }
 
     public SphericalCoords getDirection() {
@@ -43,6 +47,12 @@ public abstract class Entity {
     abstract protected CollisionShape initialCollisionShape();
 
     abstract protected Spatial initialSpatial();
+
+    public void remove() {
+        appState.getApp().getRootNode().detachChild(spatial);
+        appState.getPhysicsSpace().remove(physicsControl);
+        appState.getRoom().removeEntity(this);
+    }
 
     public void setDirection(SphericalCoords newDirection) {
         double speed = velocity.length();
