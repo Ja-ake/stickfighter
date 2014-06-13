@@ -1,5 +1,6 @@
-package rory;
+package jake;
 
+import rory.*;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
@@ -17,7 +18,7 @@ import com.jme3.scene.Node;
  * Sample 7 - how to load an OgreXML model and play an animation, using
  * channels, a controller, and an AnimEventListener.
  */
-public class ExampleClass extends SimpleApplication
+public class JakeExampleClass extends SimpleApplication
         implements AnimEventListener {
 
     private AnimChannel channel;
@@ -36,7 +37,7 @@ public class ExampleClass extends SimpleApplication
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.1f, -1f, -1).normalizeLocal());
         rootNode.addLight(dl);
-        player = (Node) assetManager.loadModel("Models/S/StickMesh.mesh.xml");
+        player = (Node) assetManager.loadModel("Models/Stick/StickMesh.mesh.xml");
         player.setLocalScale(0.5f);
         rootNode.attachChild(player);
         control = player.getControl(AnimControl.class);

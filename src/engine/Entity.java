@@ -2,6 +2,7 @@ package engine;
 
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Mesh;
 
 /**
  *
@@ -12,6 +13,7 @@ public class Entity {
     public Vector3f velocity;
     public Vector3f gravity;
     public CapsuleCollisionShape boundingbox;
+    public Mesh mesh;
     
     public Entity() {
         position = new Vector3f(0, 0, 0); // x, y, z
