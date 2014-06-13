@@ -55,7 +55,7 @@ public abstract class Entity {
     }
 
     public void setDirection(SphericalCoords newDirection) {
-        double speed = velocity.length();
+        float speed = velocity.length();
         velocity = MathEx.sphericalToRectangular(newDirection);
         setSpeed(speed);
     }
@@ -70,17 +70,17 @@ public abstract class Entity {
         position.z = pos.z;
     }
 
-    public void setSpeed(double speed) {
-        velocity.normalizeLocal().multLocal((float) speed);
+    public void setSpeed(float speed) {
+        velocity.normalizeLocal().multLocal(speed);
     }
 
-    public void update(double tpf) {
+    public void update(float tpf) {
         //Increment velocity by gravity
         if (affectedByGravity) {
-            velocity.addLocal(gravity.mult((float) tpf));
+            velocity.addLocal(gravity.mult(tpf));
         }
         //Increment position by speed
-        position.addLocal(velocity.mult((float) tpf));
+        position.addLocal(velocity.mult(tpf));
 
         spatial.setLocalTranslation(position);
     }

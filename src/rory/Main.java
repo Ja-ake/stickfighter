@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class Main extends SimpleApplication {
     
     public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.WARNING);
+        //Logger.getLogger("").setLevel(Level.WARNING);
         Main app = new Main();
         app.start();
     }
