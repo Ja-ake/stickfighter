@@ -39,13 +39,9 @@ public class Camera {
         setDirection(MathEx.rectangularToSpherical(at.subtract(position)));
     }
 
-    public void positionBehind(Vector3f pos, Vector3f dir, double radius) {
-        Vector3f posi = new Vector3f(pos);
-        Vector3f dire = new Vector3f(dir);
-        dire.x = (float) -radius;
-        dire = MathEx.sphericalToRectangular(direction);
-        posi = posi.add(dire);
-        setPosition(posi);
+    public void positionBehind(Vector3f pos, Vector3f dir, float radius) {
+        Vector3f newPos = pos.subtract(dir.normalize().mult(radius));;
+        setPosition(newPos);
         lookAt(pos);
     }
 }

@@ -13,7 +13,7 @@ public class Player extends Entity {
 
     @Override
     protected CollisionShape initialCollisionShape() {
-        return new CapsuleCollisionShape(10, 10, 10);
+        return new CapsuleCollisionShape(10, 10, 1);
     }
 
     @Override
