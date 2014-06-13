@@ -9,6 +9,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -37,13 +38,16 @@ public class ExampleClass extends SimpleApplication
         dl.setDirection(new Vector3f(-0.1f, -1f, -1).normalizeLocal());
         rootNode.addLight(dl);
         player = (Node) assetManager.loadModel("Models/S/StickMesh.mesh.xml");
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        //mat.setColor("Color", ColorRGBA.Blue);
+        player.getChild("StickMat").setMaterial(mat);
         player.setLocalScale(0.5f);
         rootNode.attachChild(player);
         control = player.getControl(AnimControl.class);
         control.addListener(this);
         channel = control.createChannel();
         channel.setAnim("Run");
-        
+
         flyCam.setMoveSpeed(20);
     }
 
