@@ -25,7 +25,7 @@ public abstract class Entity {
         appState.getApp().getRootNode().attachChild(spatial);
         physicsControl = new RigidBodyControl(initialCollisionShape(), 1);
         appState.getPhysicsSpace().add(physicsControl);
-
+        appState.getRoom().getEntityArray().add(this);
     }
 
     public SphericalCoords getDirection() {
@@ -51,7 +51,7 @@ public abstract class Entity {
     public void remove() {
         appState.getApp().getRootNode().detachChild(spatial);
         appState.getPhysicsSpace().remove(physicsControl);
-        appState.getRoom().removeEntity(this);
+        appState.getRoom().getEntityArray().remove(this);
     }
 
     public void setDirection(SphericalCoords newDirection) {

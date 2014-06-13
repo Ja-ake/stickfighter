@@ -18,10 +18,6 @@ public class Room {
         entityArray = new ArrayList();
     }
 
-    public void addEntity(Entity e) {
-        entityArray.add(e);
-    }
-
     public void loadLevel(String levelName) {
         appState.getApp().getAssetManager().registerLocator("town.zip", ZipLocator.class);
         levelModel = (Node) appState.getApp().getAssetManager().loadModel(levelName);
@@ -30,9 +26,9 @@ public class Room {
         RigidBodyControl phys = new RigidBodyControl(levelShape, 0);
         appState.getPhysicsSpace().add(phys);
     }
-
-    public void removeEntity(Entity e) {
-        entityArray.remove(e);
+    
+    public ArrayList<Entity> getEntityArray() {
+        return entityArray;
     }
 
     public void update(float tpf) {
