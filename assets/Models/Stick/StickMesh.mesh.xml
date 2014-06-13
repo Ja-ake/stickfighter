@@ -9581,7 +9581,7 @@
 								</vertexbuffer>
 				</sharedgeometry>
 				<submeshes>
-								<submesh usesharedvertices="true" material="Material__stickflat7.blend" use32bitindexes="False" operationtype="triangle_list">
+								<submesh usesharedvertices="true" material="StickMat" use32bitindexes="False" operationtype="triangle_list">
 												<faces count="4784">
 																<face v1="0" v2="1" v3="2"/>
 																<face v1="0" v2="2" v3="3"/>
@@ -14371,7 +14371,7 @@
 								</submesh>
 				</submeshes>
 				<submeshnames>
-								<submesh index="0" name="Material__stickflat7.blend">
+								<submesh index="0" name="StickMat">
 								</submesh>
 				</submeshnames>
 				<skeletonlink name="StickMesh.skeleton"/>

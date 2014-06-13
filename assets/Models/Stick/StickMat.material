@@ -1,15 +1,15 @@
-//	Material	genrated	by	blender2ogre	0.5.8
+//	StickMat	genrated	by	blender2ogre	0.5.8
 
-material	Material__stickflat7.blend	
+material	StickMat	
 {
 	receive_shadows	on	
 
 	technique
 	{
-		pass	Material
+		pass	StickMat
 		{
-			ambient	0.0	0.0	0.0	1.0
-			diffuse	0.018919787092801732	0.018919787092801732	0.018919787092801732	1.0
+			ambient	0.04870980978012085	0.04870980978012085	0.04870980978012085	1.0
+			diffuse	0.03896784840476286	0.03896784840476286	0.03896784840476286	1.0
 			specular	0.0	0.0	0.0	1.0	12.5
 			emissive	0.0	0.0	0.0	1.0
 
