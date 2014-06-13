@@ -36,7 +36,7 @@ public class ExampleClass extends SimpleApplication
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.1f, -1f, -1).normalizeLocal());
         rootNode.addLight(dl);
-        player = (Node) assetManager.loadModel("Stick/StickMesh.mesh.xml");
+        player = (Node) assetManager.loadModel("Models/Stick/StickMesh.mesh.xml");
         player.setLocalScale(0.5f);
         rootNode.attachChild(player);
         control = player.getControl(AnimControl.class);
