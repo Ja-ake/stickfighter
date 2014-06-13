@@ -1,21 +1,27 @@
 package rory;
 
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
-public class Entity {
+public abstract class Entity {
 
+    protected GameAppState appState;
     protected Vector3f position;
     protected Vector3f velocity;
     protected Vector3f gravity;
-    protected CapsuleCollisionShape boundingbox;
+    protected CollisionShape physicsShape;
     protected Spatial spatial;
+    protected boolean affectedByGravity;
 
-    public Entity() {
-        position = new Vector3f(0, 0, 0); // x, y, z
+    public Entity(GameAppState appState, Vector3f position) {
+        this.appState = appState;
+        this.position = new Vector3f(position); // x, y, z
         velocity = new Vector3f(0, 0, 0); // xdir, ydir, zdir (mag=speed)
         gravity = new Vector3f(0, -.5f, 0);
+
+        physicsShape = initialCollisionShape();
+        spatial = initialSpatial();
     }
 
     public SphericalCoords getDirection() {
@@ -33,6 +39,10 @@ public class Entity {
     public double getSpeed() {
         return velocity.length();
     }
+
+    abstract protected CollisionShape initialCollisionShape();
+
+    abstract protected Spatial initialSpatial();
 
     public void setDirection(SphericalCoords newDirection) {
         double speed = velocity.length();
@@ -55,7 +65,13 @@ public class Entity {
     }
 
     public void update(double tpf) {
-        velocity.addLocal(gravity.mult((float) tpf));
+        //Increment velocity by gravity
+        if (affectedByGravity) {
+            velocity.addLocal(gravity.mult((float) tpf));
+        }
+        //Increment position by speed
         position.addLocal(velocity.mult((float) tpf));
+
+        spatial.setLocalTranslation(position);
     }
 }
