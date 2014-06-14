@@ -5,17 +5,17 @@ import com.jme3.renderer.RenderManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Main extends SimpleApplication {
+public class GameControl extends SimpleApplication {
     
     public static void main(String[] args) {
         //Logger.getLogger("").setLevel(Level.WARNING);
-        Main app = new Main();
+        GameControl app = new GameControl();
         app.start();
     }
     
     @Override
     public void simpleInitApp() {
-        stateManager.attach(new GameAppState());
+        stateManager.attach(new RoomAppState());
     }
     
     @Override

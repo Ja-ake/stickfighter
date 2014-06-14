@@ -1,19 +1,19 @@
 package rory;
 
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 public class Player extends Entity {
 
-    public Player(GameAppState appState, Vector3f position) {
+    public Player(RoomAppState appState, Vector3f position) {
         super(appState, position);
     }
 
     @Override
-    protected CollisionShape initialCollisionShape() {
-        return new CapsuleCollisionShape(10, 10, 1);
+    protected RigidBodyControl initialCollisionShape() {
+        return new RigidBodyControl(new CapsuleCollisionShape(10, 4, 1), 1);
     }
 
     @Override

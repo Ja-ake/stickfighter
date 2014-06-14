@@ -8,7 +8,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
-public class GameAppState extends BulletAppState {
+public class RoomAppState extends BulletAppState {
 
     private Room room;
     private Camera camera;

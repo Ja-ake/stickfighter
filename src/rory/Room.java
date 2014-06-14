@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public class Room {
 
-    private GameAppState appState;
+    private RoomAppState appState;
     private Node levelModel;
     private ArrayList<Entity> entityArray;
 
-    public Room(GameAppState appState) {
+    public Room(RoomAppState appState) {
         this.appState = appState;
         entityArray = new ArrayList();
     }

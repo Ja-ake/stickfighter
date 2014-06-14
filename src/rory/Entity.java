@@ -7,7 +7,7 @@ import com.jme3.scene.Spatial;
 
 public abstract class Entity {
 
-    protected GameAppState appState;
+    protected RoomAppState appState;
     protected Vector3f position;
     protected Vector3f velocity;
     protected Vector3f gravity;
@@ -15,15 +15,24 @@ public abstract class Entity {
     protected Spatial spatial;
     protected RigidBodyControl physicsControl;
 
-    public Entity(GameAppState appState, Vector3f position) {
+    public Entity(RoomAppState appState, Vector3f position) {
+        //Variables
         this.appState = appState;
         this.position = new Vector3f(position); // x, y, z
         velocity = new Vector3f(0, 0, 0); // xdir, ydir, zdir (mag=speed)
         gravity = new Vector3f(0, -.5f, 0);
 
+        //Initialize the spatial and physicsControl
         spatial = initialSpatial();
+        physicsControl = initialCollisionShape();
+        spatial.addControl(physicsControl);
+        
+        //Physics control settings
+        physicsControl.setGravity(gravity);
+        physicsControl.setPhysicsLocation(position);
+        
+        //Add to room
         appState.getApp().getRootNode().attachChild(spatial);
-        physicsControl = new RigidBodyControl(initialCollisionShape(), 1);
         appState.getPhysicsSpace().add(physicsControl);
         appState.getRoom().getEntityArray().add(this);
     }
@@ -44,7 +53,7 @@ public abstract class Entity {
         return velocity.length();
     }
 
-    abstract protected CollisionShape initialCollisionShape();
+    abstract protected RigidBodyControl initialCollisionShape();
 
     abstract protected Spatial initialSpatial();
 
@@ -75,13 +84,14 @@ public abstract class Entity {
     }
 
     public void update(float tpf) {
-        //Increment velocity by gravity
-        if (affectedByGravity) {
-            velocity.addLocal(gravity.mult(tpf));
-        }
-        //Increment position by speed
-        position.addLocal(velocity.mult(tpf));
-
-        spatial.setLocalTranslation(position);
+        physicsControl.setLinearVelocity(velocity);
+        
+//        //Increment velocity by gravity
+//        if (affectedByGravity) {
+//            velocity.addLocal(gravity.mult(tpf));
+//        }
+//        //Increment position by speed
+//        position.addLocal(velocity.mult(tpf));
+//        spatial.setLocalTranslation(position);
     }
 }
