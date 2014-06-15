@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Human that is controllable by user input
  */
 package jake.engine.elements.entities;
 

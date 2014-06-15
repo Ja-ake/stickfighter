@@ -1,13 +1,12 @@
 /*
- * Element for 2D menu items (text, buttons)
+ * 3D camera!
  */
-
 package jake.engine.elements;
 
 /**
  *
  * @author Jake
  */
-public class Component {
+public class Camera3D {
     
 }

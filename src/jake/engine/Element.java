@@ -1,9 +1,15 @@
+/*
+ * An element of a scene, meaning anything that changes the scene (Camera, entities, particles)
+ */
+
 package jake.engine;
 
 /**
  *
  * @author Jake
  */
-public class Element {
-    
+public abstract class Element {
+    public void update(float tpf) {
+        
+    }
 }

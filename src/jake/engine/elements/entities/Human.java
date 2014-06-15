@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Entity for a human, loads the model for a human
  */
 package jake.engine.elements.entities;
 

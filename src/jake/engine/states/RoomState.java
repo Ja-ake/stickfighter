@@ -1,3 +1,7 @@
+/*
+ * State that controls the room.
+ */
+
 package jake.engine.states;
 
 import jake.engine.State;

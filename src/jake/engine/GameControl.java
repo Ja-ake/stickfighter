@@ -1,29 +1,19 @@
+/*
+ * God class, controls update loop and window initialization.
+ */
+
 package jake.engine;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
-import jake.engine.exceptions.InvalidStateException;
-import jake.engine.states.LoadingState;
 import jake.engine.states.MenuState;
 import jake.engine.states.RoomState;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author Jake
  */
 public class GameControl extends SimpleApplication {
-    private Map<String, State> states;
-    private State state;
-    
-    public GameControl() {
-        states = new HashMap();
-        states.put("Room", new RoomState());
-        states.put("Menu", new MenuState());
-        states.put("Loading", new LoadingState());
-    }
-    
     public static void main(String[] args) {
         GameControl app = new GameControl();
         app.start();
@@ -31,11 +21,11 @@ public class GameControl extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
-        try {
-        setCurrentState("Room");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        getStateManager().attach(new MenuState());
+        getStateManager().attach(new RoomState());
+        
+        getStateManager().getState(MenuState.class).setEnabled(false);
+        getStateManager().getState(RoomState.class).setEnabled(true);
     }
     
     @Override
@@ -46,14 +36,5 @@ public class GameControl extends SimpleApplication {
     @Override
     public void simpleRender(RenderManager rm) {
         
-    }
-    
-    public void setCurrentState(String sn) throws InvalidStateException {
-        State st = states.get(sn);
-        if (st != null) {
-            state = st;
-        } else {
-            throw new InvalidStateException();
-        }
     }
 }
