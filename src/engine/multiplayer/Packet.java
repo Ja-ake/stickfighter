@@ -1,4 +1,4 @@
-package engine.multiplayer.packets;
+package engine.multiplayer;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.Client;
@@ -24,8 +24,8 @@ public abstract class Packet extends AbstractMessage {
     protected Map<String, Object> objects;
     
     public abstract Class getPacketType();
-    public abstract Class pullData(Object o);
-    public abstract void pushData(Object o);
+    public abstract void pullData(Object e);
+    public abstract void pushData(Object e);
     
     public void add(String name, short d) {
         if (!(shorts.containsKey(name)
