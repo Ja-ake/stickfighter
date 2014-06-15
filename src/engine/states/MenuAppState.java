@@ -3,8 +3,8 @@
  */
 package engine.states;
 
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
+import engine.GameControl;
 import java.util.ArrayList;
 import engine.Renderer;
 import engine.State;
@@ -16,7 +16,7 @@ import engine.State;
 public class MenuAppState extends AbstractAppState implements State {
 
     @Override
-    public SimpleApplication getApp() {
+    public GameControl getApp() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

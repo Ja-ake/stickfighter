@@ -4,7 +4,6 @@
  */
 package engine;
 
-import com.jme3.app.SimpleApplication;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +12,7 @@ import java.util.ArrayList;
  */
 public interface State {
     
-    public SimpleApplication getApp();
+    public GameControl getApp();
 
     public ArrayList<Renderer> getRenderers();
 }

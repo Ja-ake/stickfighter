@@ -14,32 +14,34 @@ import engine.elements.Entity;
 import engine.states.RoomAppState;
 
 public class Player extends Entity implements AnimEventListener {
-
+    
     private AnimControl animControl;
-
+    
     public Player(RoomAppState appState, Vector3f position) {
         super(appState, position);
     }
-
+    
     @Override
     protected RigidBodyControl initialCollisionShape() {
         return new RigidBodyControl(new CapsuleCollisionShape(10, 4, 1), 1);
     }
-
+    
     @Override
     protected Spatial initialSpatial() {
         return appState.getApp().getAssetManager().loadModel("Models/S/StickMesh.mesh.xml");
     }
-
+    
     @Override
     public void update(float tpf) {
-        appState.getCamera().positionBehind(position, velocity, 20);
+        appState.getCamera().positionBehind(getPosition(), getVelocity(), 20);
+        System.out.println(appState.getApp().getInputListener().isDown("Move Forward"));
+        System.out.println(getPosition());
     }
-
+    
     @Override
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
     }
-
+    
     @Override
     public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
     }
