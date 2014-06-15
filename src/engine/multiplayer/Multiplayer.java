@@ -14,7 +14,7 @@ public class Multiplayer {
         try {
             Class[] packetClasses = ReflectionEx.getClasses("engine.multiplayer.packets");
             for (Class packetClass : packetClasses) {
-                Packet packet = ((Packet) packetClass.newInstance());
+                Packet packet = (Packet.class.cast(packetClass.newInstance()));
                 if (packet.getPacketType().getName().equals(e.getClass().getName())) {
                     packet.pullData(e);
                     return packet;

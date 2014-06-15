@@ -6,6 +6,7 @@ import com.jme3.network.HostedConnection;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Server;
 import com.jme3.network.serializing.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,14 +15,14 @@ import java.util.Map;
  */
 @Serializable
 public abstract class Packet extends AbstractMessage {
-    protected Map<String, Short> shorts;
-    protected Map<String, Integer> integers;
-    protected Map<String, Long> longs;
-    protected Map<String, Float> floats;
-    protected Map<String, Double> doubles;
-    protected Map<String, Boolean> booleans;
-    protected Map<String, String> strings;
-    protected Map<String, Object> objects;
+    protected Map<String, Short> shorts = new HashMap();
+    protected Map<String, Integer> integers = new HashMap();
+    protected Map<String, Long> longs = new HashMap();
+    protected Map<String, Float> floats = new HashMap();
+    protected Map<String, Double> doubles = new HashMap();
+    protected Map<String, Boolean> booleans = new HashMap();
+    protected Map<String, String> strings = new HashMap();
+    protected Map<String, Object> objects = new HashMap();
     
     public abstract Class getPacketType();
     public abstract void pullData(Object e);
