@@ -63,7 +63,6 @@ public class GameControl extends SimpleApplication {
         map.put("Move Left", new KeyTrigger(KeyInput.KEY_A));
         map.put("Move Back", new KeyTrigger(KeyInput.KEY_S));
         map.put("Move Right", new KeyTrigger(KeyInput.KEY_D));
-        map.put("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
 
         map.put("Look Up", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
         map.put("Look Down", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
