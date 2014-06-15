@@ -31,7 +31,7 @@ public abstract class Entity extends Element {
         physicsControl.setSpatial(spatial);
 
         //Add to room
-        appState.getApp().getRootNode().attachChild(spatial);
+        appState.getNode().attachChild(spatial);
         appState.getPhysicsSpace().add(physicsControl);
         appState.getRoom().getEntityArray().add(this);
     }

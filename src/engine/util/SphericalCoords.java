@@ -12,4 +12,20 @@ public class SphericalCoords {
         this.t = t;
         this.p = p;
     }
+
+    public SphericalCoords addP(float f) {
+        return new SphericalCoords(r, t, p + f);
+    }
+
+    public SphericalCoords addT(float f) {
+        return new SphericalCoords(r, t + f, p);
+    }
+
+    public SphericalCoords setP(float f) {
+        return new SphericalCoords(r, t, f);
+    }
+
+    public SphericalCoords setT(float f) {
+        return new SphericalCoords(r, f, p);
+    }
 }

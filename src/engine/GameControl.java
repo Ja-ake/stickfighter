@@ -5,7 +5,10 @@ package engine;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseAxisTrigger;
+import com.jme3.input.controls.Trigger;
 import com.jme3.renderer.RenderManager;
 import engine.states.MenuAppState;
 import engine.states.RoomAppState;
@@ -40,6 +43,7 @@ public class GameControl extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
+        inputManager.setCursorVisible(false);
         inputPacket = inputListener.createInputPacket();
         inputListener.clear();
     }
@@ -53,20 +57,25 @@ public class GameControl extends SimpleApplication {
     }
 
     private void initKeys() {
-        HashMap<String, Integer> keyMap = new HashMap();
+        HashMap<String, Trigger> map = new HashMap();
 
-        keyMap.put("Move Forward", KeyInput.KEY_W);
-        keyMap.put("Move Left", KeyInput.KEY_A);
-        keyMap.put("Move Back", KeyInput.KEY_S);
-        keyMap.put("Move Right", KeyInput.KEY_D);
+        map.put("Move Forward", new KeyTrigger(KeyInput.KEY_W));
+        map.put("Move Left", new KeyTrigger(KeyInput.KEY_A));
+        map.put("Move Back", new KeyTrigger(KeyInput.KEY_S));
+        map.put("Move Right", new KeyTrigger(KeyInput.KEY_D));
 
-        for (String s : keyMap.keySet()) {
-            inputManager.addMapping(s, new KeyTrigger(keyMap.get(s)));
+        map.put("Look Up", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
+        map.put("Look Down", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
+        map.put("Look Left", new MouseAxisTrigger(MouseInput.AXIS_X, true));
+        map.put("Look Right", new MouseAxisTrigger(MouseInput.AXIS_X, false));
+
+        for (String s : map.keySet()) {
+            inputManager.addMapping(s, map.get(s));
         }
 
         inputListener = new InputListener();
-        inputManager.addListener(inputListener, keyMap.keySet().toArray(new String[0]));
-        
+        inputManager.addListener(inputListener, map.keySet().toArray(new String[0]));
+
         inputPacket = inputListener.createInputPacket();
     }
 }
