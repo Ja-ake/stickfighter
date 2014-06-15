@@ -1,11 +1,17 @@
-package rory;
+/*
+ * Element for objects in the room (Player, trees)
+ */
+package engine.elements;
 
-import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import engine.Element;
+import engine.states.RoomAppState;
+import engine.util.MathEx;
+import engine.util.SphericalCoords;
 
-public abstract class Entity {
+public abstract class Entity extends Element {
 
     protected RoomAppState appState;
     protected Vector3f position;
@@ -26,11 +32,11 @@ public abstract class Entity {
         spatial = initialSpatial();
         physicsControl = initialCollisionShape();
         spatial.addControl(physicsControl);
-        
+
         //Physics control settings
         physicsControl.setGravity(gravity);
         physicsControl.setPhysicsLocation(position);
-        
+
         //Add to room
         appState.getApp().getRootNode().attachChild(spatial);
         appState.getPhysicsSpace().add(physicsControl);
@@ -74,9 +80,7 @@ public abstract class Entity {
     }
 
     public void setPosition(Vector3f pos) {
-        position.x = pos.x;
-        position.y = pos.y;
-        position.z = pos.z;
+        position = new Vector3f(pos);
     }
 
     public void setSpeed(float speed) {
@@ -85,7 +89,7 @@ public abstract class Entity {
 
     public void update(float tpf) {
         physicsControl.setLinearVelocity(velocity);
-        
+
 //        //Increment velocity by gravity
 //        if (affectedByGravity) {
 //            velocity.addLocal(gravity.mult(tpf));

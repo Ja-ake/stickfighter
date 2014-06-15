@@ -1,4 +1,7 @@
-package rory;
+/*
+ * Useful math stuff.
+ */
+package engine.util;
 
 import com.jme3.math.Vector3f;
 import static java.lang.Math.*;

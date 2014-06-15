@@ -1,7 +1,6 @@
 /*
  * Element for objects in the room (Player, trees)
  */
-
 package jake.engine.elements;
 
 import com.jme3.bullet.BulletAppState;
@@ -19,15 +18,14 @@ import jake.engine.util.SphericalCoords;
  *
  * @author Jake
  */
-public class Entity extends Element {
-    
+public abstract class Entity extends Element {
+
     protected State appState;
     protected Vector3f position;
     protected Vector3f velocity;
     protected Vector3f gravity;
     protected Spatial spatial;
     protected RigidBodyControl physicsControl;
-    
     protected boolean affectedByGravity;
 
     public Entity(State appState, Vector3f position) {
@@ -60,12 +58,13 @@ public class Entity extends Element {
     }
 
     abstract protected CollisionShape initialCollisionShape();
+
     abstract protected Spatial initialSpatial();
 
     public void remove() {
         appState.getApp().getRootNode().detachChild(spatial);
         appState.getPhysicsSpace().remove(physicsControl);
-        ((Room)appState.getRenderers(Room.class).get(0)).removeEntity(this);
+        ((Room) appState.getRenderers(Room.class).get(0)).removeEntity(this);
     }
 
     public void setDirection(SphericalCoords newDirection) {
