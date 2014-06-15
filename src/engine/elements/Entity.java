@@ -3,7 +3,7 @@
  */
 package engine.elements;
 
-import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import engine.Element;
@@ -14,9 +14,8 @@ import engine.util.SphericalCoords;
 public abstract class Entity extends Element {
 
     protected RoomAppState appState;
-    protected Vector3f gravity;
     protected Spatial spatial;
-    protected RigidBodyControl physicsControl;
+    protected PhysicsControl physicsControl;
 
     public Entity(RoomAppState appState, Vector3f position) {
         //Variables
@@ -24,13 +23,12 @@ public abstract class Entity extends Element {
 
         //Create the spatial
         spatial = initialSpatial();
-        spatial.setLocalTranslation(position);
+        spatial.move(position);
 
         //Create the physicsControl
         physicsControl = initialCollisionShape();
         spatial.addControl(physicsControl);
-        gravity = new Vector3f(0, -.5f, 0);
-        physicsControl.setGravity(gravity);
+        physicsControl.setSpatial(spatial);
 
         //Add to room
         appState.getApp().getRootNode().attachChild(spatial);
@@ -43,14 +41,12 @@ public abstract class Entity extends Element {
     }
 
     public Vector3f getPosition() {
-        return physicsControl.getPhysicsLocation();
+        return spatial.getLocalTranslation();
     }
 
-    public Vector3f getVelocity() {
-        return physicsControl.getLinearVelocity();
-    }
+    public abstract Vector3f getVelocity();
 
-    abstract protected RigidBodyControl initialCollisionShape();
+    abstract protected PhysicsControl initialCollisionShape();
 
     abstract protected Spatial initialSpatial();
 
@@ -66,17 +62,13 @@ public abstract class Entity extends Element {
         setSpeed(speed);
     }
 
-    public void setPosition(Vector3f newPosition) {
-        physicsControl.setPhysicsLocation(newPosition);
-    }
+    public abstract void setPosition(Vector3f newPosition);
 
     public void setSpeed(float newSpeed) {
         setVelocity(getVelocity().normalize().mult(newSpeed));
     }
 
-    public void setVelocity(Vector3f newVelocity) {
-        physicsControl.setLinearVelocity(newVelocity);
-    }
+    public abstract void setVelocity(Vector3f newVelocity);
 
     @Override
     public void update(float tpf) {

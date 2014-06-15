@@ -11,6 +11,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import engine.GameControl;
+import engine.InputPacket;
 import java.util.ArrayList;
 import engine.Renderer;
 import engine.State;
@@ -56,6 +57,10 @@ public class RoomAppState extends BulletAppState implements State {
 
     public Camera3D getCamera() {
         return camera;
+    }
+    
+    public InputPacket getInputPacket() {
+        return getApp().getInputPacket();
     }
 
     @Override

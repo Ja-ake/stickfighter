@@ -18,6 +18,7 @@ import java.util.HashMap;
 public class GameControl extends SimpleApplication {
 
     private InputListener inputListener;
+    private InputPacket inputPacket;
 
     public static void main(String[] args) {
         GameControl app = new GameControl();
@@ -27,7 +28,7 @@ public class GameControl extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         flyCam.setEnabled(false);
-        
+
         initKeys();
 
         getStateManager().attach(new MenuAppState());
@@ -39,6 +40,7 @@ public class GameControl extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
+        inputPacket = inputListener.createInputPacket();
         inputListener.clear();
     }
 
@@ -46,8 +48,8 @@ public class GameControl extends SimpleApplication {
     public void simpleRender(RenderManager rm) {
     }
 
-    public InputListener getInputListener() {
-        return inputListener;
+    public InputPacket getInputPacket() {
+        return inputPacket;
     }
 
     private void initKeys() {
@@ -64,5 +66,7 @@ public class GameControl extends SimpleApplication {
 
         inputListener = new InputListener();
         inputManager.addListener(inputListener, keyMap.keySet().toArray(new String[0]));
+        
+        inputPacket = inputListener.createInputPacket();
     }
 }

@@ -25,15 +25,7 @@ public class InputListener implements ActionListener {
         released.clear();
     }
 
-    public boolean isDown(String name) {
-        return down.contains(name);
-    }
-
-    public boolean isPressed(String name) {
-        return pressed.contains(name);
-    }
-
-    public boolean isReleased(String name) {
-        return released.contains(name);
+    public InputPacket createInputPacket() {
+        return new InputPacket(down, pressed, released);
     }
 }
