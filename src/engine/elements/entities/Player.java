@@ -14,12 +14,11 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import engine.elements.Entity;
 import engine.states.RoomAppState;
 import engine.util.SphericalCoords;
 import engine.util.MathEx;
 
-public class Player extends Entity implements AnimEventListener {
+public class Player extends Human implements AnimEventListener {
 
     private AnimControl animControl;
     private AnimChannel animChannel;
@@ -40,34 +39,6 @@ public class Player extends Entity implements AnimEventListener {
         animChannel.setAnim("Stand");
         animChannel.setLoopMode(LoopMode.Loop);
     }
-
-    private BetterCharacterControl getBCC() {
-        return (BetterCharacterControl) physicsControl;
-    }
-
-    public float getMass() {
-        return 1000;
-    }
-
-    @Override
-    public Vector3f getVelocity() {
-        return getBCC().getVelocity();
-    }
-
-    @Override
-    protected PhysicsControl initialCollisionShape() {
-        return new BetterCharacterControl(2, 5, getMass());
-    }
-
-    @Override
-    protected Spatial initialSpatial() {
-        Node s = (Node) appState.getApp().getAssetManager().loadModel("Models/S/StickMesh.mesh.xml");
-        Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-        s.getChild("StickMat").setMaterial(mat);
-        s.scale(.5f);
-        return s;
-    }
-
     public void move(float tpf) {
         //Calculate Move Direction
         int moveF = 0;
@@ -115,20 +86,10 @@ public class Player extends Entity implements AnimEventListener {
         }
     }
 
-    @Override
-    public void setPosition(Vector3f newPosition) {
-        getBCC().warp(newPosition);
-    }
-
     public void setRotation(SphericalCoords rotation, float tpf) {
         Vector3f targetRotation = MathEx.sphericalToRectangular(rotation.setP(FastMath.HALF_PI));
         Vector3f change = targetRotation.subtract(getBCC().getViewDirection()).normalize().mult(10 * tpf);
         getBCC().setViewDirection(getBCC().getViewDirection().add(change).normalize());
-    }
-
-    @Override
-    public void setVelocity(Vector3f newVelocity) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

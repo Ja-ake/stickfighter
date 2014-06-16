@@ -8,6 +8,7 @@ import engine.elements.entities.Human;
  * @author Jake
  */
 public class MultiplayerTest {
+
     public static void main(String[] args) {
         Multiplayer multiplayer = new Multiplayer();
         Packet p = multiplayer.createPacket(new Human(new Vector3f(0, 0, 0)));

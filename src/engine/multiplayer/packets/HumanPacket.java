@@ -8,6 +8,7 @@ import engine.multiplayer.Packet;
  * @author Jake
  */
 public class HumanPacket extends Packet {
+
     @Override
     public Class getPacketType() {
         return Human.class;
