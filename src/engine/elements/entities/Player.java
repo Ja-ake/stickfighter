@@ -44,7 +44,7 @@ public class Player extends Entity implements AnimEventListener {
     private BetterCharacterControl getBCC() {
         return (BetterCharacterControl) physicsControl;
     }
-    
+
     public float getMass() {
         return 1000;
     }
@@ -68,7 +68,7 @@ public class Player extends Entity implements AnimEventListener {
         return s;
     }
 
-    public void move() {
+    public void move(float tpf) {
         //Calculate Move Direction
         int moveF = 0;
         int moveS = 0;
@@ -86,7 +86,7 @@ public class Player extends Entity implements AnimEventListener {
         }
         //Move
         if (moveF != 0 || moveS != 0) {
-            setRotation(facing.addT((float) Math.atan2(moveS, moveF)));
+            setRotation(facing.addT((float) Math.atan2(moveS, moveF)), tpf);
             getBCC().setWalkDirection(getBCC().getViewDirection().mult(runSpeed));
             setAnimation("Run", false);
         } else {
@@ -120,9 +120,9 @@ public class Player extends Entity implements AnimEventListener {
         getBCC().warp(newPosition);
     }
 
-    public void setRotation(SphericalCoords rotation) {
+    public void setRotation(SphericalCoords rotation, float tpf) {
         Vector3f targetRotation = MathEx.sphericalToRectangular(rotation.setP(FastMath.HALF_PI));
-        Vector3f change = targetRotation.subtract(getBCC().getViewDirection()).mult(.01f);
+        Vector3f change = targetRotation.subtract(getBCC().getViewDirection()).normalize().mult(10 * tpf);
         getBCC().setViewDirection(getBCC().getViewDirection().add(change).normalize());
     }
 
@@ -133,7 +133,7 @@ public class Player extends Entity implements AnimEventListener {
 
     @Override
     public void update(float tpf) {
-        move();
+        move(tpf);
         //Turn View
         facing = facing.addP(-appState.getInputPacket().getValue("Look Up"));
         facing = facing.addP(appState.getInputPacket().getValue("Look Down"));
