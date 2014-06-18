@@ -44,7 +44,7 @@ public class RoomAppState extends BulletAppState implements State {
         camera = new Camera3D(app.getCamera());
         room.loadLevel("main.scene");
         
-        new Player(this, new Vector3f(0, 100, 0));
+        new Player(this, new Vector3f(0, 20, 0));
         
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(2f));
