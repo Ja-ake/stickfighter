@@ -17,9 +17,6 @@ public class HumanPacket extends Packet {
     @Override
     public void pullData(Object o) {
         Human p = (Human) o;
-        add("x", p.position.x);
-        add("y", p.position.y);
-        add("z", p.position.z);
     }
 
     @Override

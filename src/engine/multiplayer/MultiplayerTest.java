@@ -9,9 +9,9 @@ import engine.elements.entities.Human;
  */
 public class MultiplayerTest {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Multiplayer multiplayer = new Multiplayer();
-        Packet p = multiplayer.createPacket(new Human(new Vector3f(0, 0, 0)));
+        //Packet p = multiplayer.createPacket(new Human(new Vector3f(0, 0, 0)));
         System.out.println(p.get("x"));
-    }
+    }*/
 }
