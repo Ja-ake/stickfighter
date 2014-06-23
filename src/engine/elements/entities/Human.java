@@ -20,7 +20,7 @@ public class Human extends Entity {
     }
 
     public float getMass() {
-        return 1000;
+        return 100;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Human extends Entity {
 
     @Override
     protected PhysicsControl initialCollisionShape() {
-        return new BetterCharacterControl(2, 5, getMass());
+        return new BetterCharacterControl(1, 5, getMass());
     }
 
     @Override
