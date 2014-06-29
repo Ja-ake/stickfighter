@@ -3,6 +3,7 @@ package engine.elements.entities;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -36,7 +37,8 @@ public class Human extends Entity {
     @Override
     protected Spatial initialSpatial() {
         Node s = (Node) appState.getApp().getAssetManager().loadModel("Models/S/StickMesh.mesh.xml");
-        Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.Black);
         s.getChild("StickMat").setMaterial(mat);
         s.scale(.5f);
         return s;
