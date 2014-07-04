@@ -11,5 +11,4 @@ package engine.elements;
  * @author Jake
  */
 public class Camera2D {
-    //edit
 }
