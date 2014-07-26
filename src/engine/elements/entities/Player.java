@@ -43,25 +43,25 @@ public class Player extends Human implements AnimEventListener {
         //Returns -1 if no keys are pressed
         if (appState.getInputPacket().isDown("Move Forward")) {
             if (appState.getInputPacket().isDown("Move Right")) {
-                return -FastMath.QUARTER_PI;
-            } else if (appState.getInputPacket().isDown("Move Left")) {
                 return FastMath.QUARTER_PI;
+            } else if (appState.getInputPacket().isDown("Move Left")) {
+                return -FastMath.QUARTER_PI;
             } else {
                 return 0;
             }
         } else if (appState.getInputPacket().isDown("Move Back")) {
             if (appState.getInputPacket().isDown("Move Right")) {
-                return FastMath.QUARTER_PI - FastMath.PI;
-            } else if (appState.getInputPacket().isDown("Move Left")) {
                 return FastMath.PI - FastMath.QUARTER_PI;
+            } else if (appState.getInputPacket().isDown("Move Left")) {
+                return FastMath.QUARTER_PI - FastMath.PI;
             } else {
                 return FastMath.PI;
             }
         } else {
             if (appState.getInputPacket().isDown("Move Right")) {
-                return -FastMath.HALF_PI;
-            } else if (appState.getInputPacket().isDown("Move Left")) {
                 return FastMath.HALF_PI;
+            } else if (appState.getInputPacket().isDown("Move Left")) {
+                return -FastMath.HALF_PI;
             } else {
                 return -1;
             }
@@ -72,7 +72,12 @@ public class Player extends Human implements AnimEventListener {
         float moveDir = getMoveDirection();
         //Move
         if (moveDir != -1) {
-            SphericalCoords newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(runSpeed);
+            SphericalCoords newMoveDir;
+            if (Math.abs(moveDir) < 1) {
+                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(runSpeed);
+            } else {
+                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(runSpeed / 2);
+            }
             getBCC().setWalkDirection(MathEx.sphericalToRectangular(newMoveDir));
             setAnimation("Run", false);
         } else {
