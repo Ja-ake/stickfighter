@@ -117,27 +117,10 @@ public class Player extends Human implements AnimEventListener {
 
         //Cap View
         if (getFacing().p < .2) {
-            System.out.println("cap U");
             setFacing(getFacing().setP(.2f));
         }
         if (getFacing().p > Math.PI - .2) {
             setFacing(getFacing().setP(FastMath.PI - .2f));
-            System.out.println("cap D");
-        }
-
-        //Testing
-        //System.out.println(getFacing());
-        if (appState.getInputPacket().getValue("Look Up") != 0) {
-            System.out.println("Up: " + appState.getInputPacket().getValue("Look Up"));
-        }
-        if (appState.getInputPacket().getValue("Look Down") != 0) {
-            System.out.println("Down: " + appState.getInputPacket().getValue("Look Down"));
-        }
-        if (appState.getInputPacket().getValue("Look Left") != 0) {
-            System.out.println("Left: " + appState.getInputPacket().getValue("Look Left"));
-        }
-        if (appState.getInputPacket().getValue("Look Right") != 0) {
-            System.out.println("Right: " + appState.getInputPacket().getValue("Look Right"));
         }
 
         //Set Camera

@@ -17,8 +17,8 @@ public abstract class MathEx {
 
     public static SphericalCoords rectangularToSpherical(Vector3f rect) {
         double r = rect.length();
-        double t = atan2(rect.y, rect.x);
-        double p = acos(rect.z / rect.length());
+        double t = atan2(rect.z, rect.x);
+        double p = acos(rect.y / rect.length());
         return new SphericalCoords((float) r, (float) t, (float) p);
     }
 }
