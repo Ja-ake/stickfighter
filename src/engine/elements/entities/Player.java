@@ -18,12 +18,11 @@ public class Player extends Human implements AnimEventListener {
     private AnimControl animControl;
     private AnimChannel animChannel;
     private float runSpeed;
-    private SphericalCoords facing;
 
     public Player(RoomAppState appState, Vector3f position) {
         super(appState, position);
         runSpeed = 20;
-        facing = new SphericalCoords(1, FastMath.HALF_PI, FastMath.HALF_PI);
+
         getBCC().setViewDirection(new Vector3f(1, 0, 0));
         getBCC().setGravity(new Vector3f(0, -100, 0));
         getBCC().setJumpForce(new Vector3f(0, 50 * getMass(), 0));
@@ -34,26 +33,47 @@ public class Player extends Human implements AnimEventListener {
         animChannel.setAnim("Stand");
         animChannel.setLoopMode(LoopMode.Loop);
     }
-    public void move(float tpf) {
-        //Calculate Move Direction
-        int moveF = 0;
-        int moveS = 0;
+
+    public SphericalCoords getFacing() {
+        return MathEx.rectangularToSpherical(getBCC().getViewDirection());
+    }
+
+    public float getMoveDirection() {
+        //Calculate Move Direction based on keyboard input
+        //Returns -1 if no keys are pressed
         if (appState.getInputPacket().isDown("Move Forward")) {
-            moveF++;
+            if (appState.getInputPacket().isDown("Move Right")) {
+                return -FastMath.QUARTER_PI;
+            } else if (appState.getInputPacket().isDown("Move Left")) {
+                return FastMath.QUARTER_PI;
+            } else {
+                return 0;
+            }
+        } else if (appState.getInputPacket().isDown("Move Back")) {
+            if (appState.getInputPacket().isDown("Move Right")) {
+                return FastMath.QUARTER_PI - FastMath.PI;
+            } else if (appState.getInputPacket().isDown("Move Left")) {
+                return FastMath.PI - FastMath.QUARTER_PI;
+            } else {
+                return FastMath.PI;
+            }
+        } else {
+            if (appState.getInputPacket().isDown("Move Right")) {
+                return -FastMath.HALF_PI;
+            } else if (appState.getInputPacket().isDown("Move Left")) {
+                return FastMath.HALF_PI;
+            } else {
+                return -1;
+            }
         }
-        if (appState.getInputPacket().isDown("Move Back")) {
-            moveF--;
-        }
-        if (appState.getInputPacket().isDown("Move Right")) {
-            moveS++;
-        }
-        if (appState.getInputPacket().isDown("Move Left")) {
-            moveS--;
-        }
+    }
+
+    public void move(float tpf) {
+        float moveDir = getMoveDirection();
         //Move
-        if (moveF != 0 || moveS != 0) {
-            setRotation(facing.addT((float) Math.atan2(moveS, moveF)), tpf);
-            getBCC().setWalkDirection(getBCC().getViewDirection().mult(runSpeed));
+        if (moveDir != -1) {
+            SphericalCoords newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(runSpeed);
+            getBCC().setWalkDirection(MathEx.sphericalToRectangular(newMoveDir));
             setAnimation("Run", false);
         } else {
             getBCC().setWalkDirection(new Vector3f(0, 0, 0));
@@ -81,28 +101,46 @@ public class Player extends Human implements AnimEventListener {
         }
     }
 
-    public void setRotation(SphericalCoords rotation, float tpf) {
-        Vector3f targetRotation = MathEx.sphericalToRectangular(rotation.setP(FastMath.HALF_PI));
-        Vector3f change = targetRotation.subtract(getBCC().getViewDirection()).normalize().mult(10 * tpf);
-        getBCC().setViewDirection(getBCC().getViewDirection().add(change).normalize());
+    public void setFacing(SphericalCoords s) {
+        getBCC().setViewDirection(MathEx.sphericalToRectangular(s));
     }
 
     @Override
     public void update(float tpf) {
         move(tpf);
+
         //Turn View
-        facing = facing.addP(-appState.getInputPacket().getValue("Look Up"));
-        facing = facing.addP(appState.getInputPacket().getValue("Look Down"));
-        facing = facing.addT(-appState.getInputPacket().getValue("Look Left"));
-        facing = facing.addT(appState.getInputPacket().getValue("Look Right"));
+        setFacing(getFacing().addP(-appState.getInputPacket().getValue("Look Up")));
+        setFacing(getFacing().addP(appState.getInputPacket().getValue("Look Down")));
+        setFacing(getFacing().addT(-appState.getInputPacket().getValue("Look Left")));
+        setFacing(getFacing().addT(appState.getInputPacket().getValue("Look Right")));
+
         //Cap View
-        if (facing.p < .2) {
-            facing = facing.setP(.2f);
+        if (getFacing().p < .2) {
+            System.out.println("cap U");
+            setFacing(getFacing().setP(.2f));
         }
-        if (facing.p > Math.PI - .2) {
-            facing = facing.setP(FastMath.PI - .2f);
+        if (getFacing().p > Math.PI - .2) {
+            setFacing(getFacing().setP(FastMath.PI - .2f));
+            System.out.println("cap D");
         }
+
+        //Testing
+        //System.out.println(getFacing());
+        if (appState.getInputPacket().getValue("Look Up") != 0) {
+            System.out.println("Up: " + appState.getInputPacket().getValue("Look Up"));
+        }
+        if (appState.getInputPacket().getValue("Look Down") != 0) {
+            System.out.println("Down: " + appState.getInputPacket().getValue("Look Down"));
+        }
+        if (appState.getInputPacket().getValue("Look Left") != 0) {
+            System.out.println("Left: " + appState.getInputPacket().getValue("Look Left"));
+        }
+        if (appState.getInputPacket().getValue("Look Right") != 0) {
+            System.out.println("Right: " + appState.getInputPacket().getValue("Look Right"));
+        }
+
         //Set Camera
-        appState.getCamera().positionBehind(getPosition().add(0, 3, 0), MathEx.sphericalToRectangular(facing), 10);
+        appState.getCamera().positionBehind(getPosition().add(0, 3, 0), MathEx.sphericalToRectangular(getFacing()), 10);
     }
 }

@@ -21,11 +21,20 @@ public class SphericalCoords {
         return new SphericalCoords(r, t + f, p);
     }
 
+    public SphericalCoords setR(float f) {
+        return new SphericalCoords(f, t, p);
+    }
+
     public SphericalCoords setP(float f) {
         return new SphericalCoords(r, t, f);
     }
 
     public SphericalCoords setT(float f) {
         return new SphericalCoords(r, f, p);
+    }
+
+    @Override
+    public String toString() {
+        return r + " " + t + " " + p;
     }
 }
