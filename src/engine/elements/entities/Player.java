@@ -85,11 +85,11 @@ public class Player extends Human implements AnimEventListener {
             setAnimation("Stand", false);
         }
         //Jump
-        if (getBCC().isOnGround()) {
+        //if (getBCC().isOnGround()) {
             if (appState.getInputPacket().isPressed("Jump")) {
                 getBCC().jump();
             }
-        }
+        //}
     }
 
     @Override

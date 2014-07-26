@@ -1,6 +1,5 @@
 package engine.elements.entities;
 
-import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -16,8 +15,8 @@ public class Human extends Entity {
         super(appState, position);
     }
 
-    protected BetterCharacterControl getBCC() {
-        return (BetterCharacterControl) physicsControl;
+    protected MyBetterCharacterControl getBCC() {
+        return (MyBetterCharacterControl) physicsControl;
     }
 
     public float getMass() {
@@ -31,7 +30,7 @@ public class Human extends Entity {
 
     @Override
     protected PhysicsControl initialCollisionShape() {
-        return new BetterCharacterControl(1, 5, getMass());
+        return new MyBetterCharacterControl(1, 5, getMass());
     }
 
     @Override
