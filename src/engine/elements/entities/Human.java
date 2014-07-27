@@ -30,7 +30,7 @@ public class Human extends Entity {
 
         scc.setDamping(0.5f, 0.5f);
         scc.setSleepingThresholds(0.7f, 0.7f);
-        scc.setFrictionWalk(.05f);
+        scc.setFrictionWalk(.2f);
         scc.setAngularFactor(0);
         scc.setMoveSpeed(40);
         scc.setMoveSlopeSpeed(0.3f);

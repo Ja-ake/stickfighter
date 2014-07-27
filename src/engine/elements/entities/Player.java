@@ -83,7 +83,7 @@ public class Player extends Human implements AnimEventListener {
             getControl().setWalkDirection(MathEx.sphericalToRectangular(newMoveDir));
             setAnimation("Run", false);
         } else {
-            getControl().setMove(false);
+            //getControl().setMove(false);
             getControl().setWalkDirection(new Vector3f(0, 0, 0));
             setAnimation("Stand", false);
         }

@@ -79,7 +79,7 @@ public class RoomAppState extends BulletAppState implements State {
         createFilters();
 
         //Draw physics mesh
-        getPhysicsSpace().enableDebug(getApp().getAssetManager());
+//        getPhysicsSpace().enableDebug(getApp().getAssetManager());
     }
 
     @Override
