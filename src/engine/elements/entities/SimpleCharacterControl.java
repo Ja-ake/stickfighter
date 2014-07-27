@@ -19,6 +19,7 @@ import java.util.List;
 
 public class SimpleCharacterControl extends RigidBodyControl implements PhysicsTickListener {
 
+    //The app herp derp
     private Application app;
     //Should you move, should you jump
     private boolean doMove, doJump, hasJumped = false;
@@ -32,9 +33,9 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
     private int stopTimer, jumpTimer, maxStopTimer, maxJumpTimer;
     //If you've moved since the last timer update?
     private boolean hasMoved = false;
-    //The angle of the thing you're standing on?
+    //The angle of the thing you're standing on
     private float angleNormals = 0;
-    //The ray test to below you
+    //The object below you
     private PhysicsRayTestResult physicsClosestTest;
     //Movement constants
     private float jumpSpeedY, moveSpeed, moveSpeedMultiplier, moveSlopeSpeed, slopeLimitAngle, stopDamping, centerToBottomHeight;
@@ -64,7 +65,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
 
         this.centerToBottomHeight = centerToBottomHeight;
 
-        this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().addTickListener(this);
+        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().addTickListener(this);
     }
 
     @Override
@@ -83,31 +84,34 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
 //    }
     @Override
     public void prePhysicsTick(PhysicsSpace space, float tpf) {
-        //No idea what this does
+        //Update the angle of the ground you're on
         if (physicsClosestTest != null) {
             angleNormals = physicsClosestTest.getHitNormalLocal().normalizeLocal().angleBetween(Vector3f.UNIT_Y);
         }
         //Set friction, depending on whether you're moving or stopped
         if (angleNormals < slopeLimitAngle && physicsClosestTest != null && (!doMove && !doJump && !hasJumped)) {
-            this.setFriction(frictionStop);
+            setFriction(frictionStop);
         } else {
-            this.setFriction(frictionWalk);
+            setFriction(frictionWalk);
         }
         //If you should move...
         if (doMove) {
             //Calculate the direction in which to apply force
             Vector3f moveCharVec = walkDirection.mult(moveSpeed * moveSpeedMultiplier);
-            moveCharVec.setY(this.getLinearVelocity().getY());
-            //No idea what this does
-            if ((angleNormals < slopeLimitAngle && physicsClosestTest != null) || !this.isActive()) {
-                this.setLinearVelocity(moveCharVec.interpolate(this.getLinearVelocity(), mainWalkInterpolation));
+            moveCharVec.setY(getLinearVelocity().getY());
+            //Depending on where you are...
+            if ((angleNormals < slopeLimitAngle && physicsClosestTest != null) || !isActive()) {
+                //If you're on a gentle slope
+                setLinearVelocity(moveCharVec.interpolate(getLinearVelocity(), mainWalkInterpolation));
             } else if (angleNormals > slopeLimitAngle && angleNormals < FastMath.DEG_TO_RAD * 80f && physicsClosestTest != null) {
-                this.applyCentralForce((walkDirection.mult(moveSlopeSpeed).setY(0f)));
-//                this.setLinearVelocity(moveCharVec.interpolate(this.getLinearVelocity(), 0.99f));
+                //If you're on a steep slope
+                applyCentralForce((walkDirection.mult(moveSlopeSpeed).setY(0f)));
+//                setLinearVelocity(moveCharVec.interpolate(getLinearVelocity(), 0.99f));
             } else {
+                //If you're in the air
 //                physSp.applyCentralForce((walkDirection.mult(moveSlopeSpeed).setY(0f)));
-//                this.setLinearVelocity(moveCharVec.setY(this.getLinearVelocity().getY()));
-                this.setLinearVelocity(moveCharVec.interpolate(this.getLinearVelocity(), otherWalkInterpolation));
+//                setLinearVelocity(moveCharVec.setY(getLinearVelocity().getY()));
+                setLinearVelocity(moveCharVec.interpolate(getLinearVelocity(), otherWalkInterpolation));
             }
             //Update variables
             hasMoved = true;
@@ -115,7 +119,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
             stopTimer = 0;
             jumpTimer = 0;
         }
-
+        //Step the jump timer
         if (jumpTimer > 0) {
             if (jumpTimer > maxJumpTimer) {
                 jumpTimer = 0;
@@ -123,61 +127,65 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
                 jumpTimer++;
             }
         }
-
-        if (doJump && !hasJumped && (physicsClosestTest != null || !this.isActive())) {
+        //If you should jump...
+        if (doJump && !hasJumped && (physicsClosestTest != null || !isActive())) {
+            //If the slope is gentle
             if ((angleNormals < slopeLimitAngle)) {
-//                this.clearForces();
-                this.setLinearVelocity(this.getLinearVelocity().add(Vector3f.UNIT_Y.clone().multLocal(jumpSpeedY).addLocal(additiveJumpSpeed)));
+                //Jump
+//                clearForces();
+                setLinearVelocity(getLinearVelocity().add(Vector3f.UNIT_Y.clone().multLocal(jumpSpeedY).addLocal(additiveJumpSpeed)));
 //                physSp.applyImpulse(Vector3f.UNIT_Y.mult(jumpSpeed), Vector3f.ZERO);
                 hasJumped = true;
                 jumpTimer = 1;
             }
         }
-
-
-        // Stop the char
+        //If you should stop...
         if ((hasMoved || hasJumped) && physicsClosestTest != null && angleNormals < slopeLimitAngle && !doMove) {
-
+            //If you've both jumped and moved
             if (hasJumped && hasMoved) {
+                //Say you haven't jumped (no idea why)
                 hasJumped = false;
                 jumpTimer = 0;
             }
-
-            if (stopTimer < maxStopTimer && jumpTimer == 0) {
-//                this.setLinearDamping(1f);
-//                this.setFriction(10f);
-                this.setLinearVelocity(this.getLinearVelocity().multLocal(new Vector3f(stopDamping, 1, stopDamping)));
-                stopTimer += 1;
-            } else {
-                if (jumpTimer == 0) {
-//                    this.setLinearDamping(0.5f);
-//                    this.setFriction(0.3f);
+            //If you're not jumping
+            if (jumpTimer == 0) {
+                if (stopTimer < maxStopTimer) {
+                    //If you're not done stopping
+//                setLinearDamping(1f);
+//                setFriction(10f);
+                    setLinearVelocity(getLinearVelocity().multLocal(new Vector3f(stopDamping, 1, stopDamping)));
+                    stopTimer += 1;
+                } else {
+                    //If you are done stopping
+//                    setLinearDamping(0.5f);
+//                    setFriction(0.3f);
                     stopTimer = 0;
                     hasMoved = false;
                     hasJumped = false;
                     jumpTimer = 0;
                 }
-
             }
         }
 //        else {
-//            this.setLinearDamping(0.5f);
-//            this.setFriction(0.3f);
+//            setLinearDamping(0.5f);
+//            setFriction(0.3f);
 //        }
-
+        //Update variables
         if (doJump) {
             doJump = false; // set it after damping
         }
     }
 
+    //This method calculates the closest object below you, if there is one
+    @Override
     public void physicsTick(PhysicsSpace space, float tpf) {
         physicsClosestTest = null;
         angleNormals = 0f;
         float closestFraction = centerToBottomHeight * 10f;
 
-        if (this.isActive()) {
-            List<PhysicsRayTestResult> results = space.rayTest(this.getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-0.8f * centerToBottomHeight)),
-                    this.getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-1.3f * centerToBottomHeight)));
+        if (isActive()) {
+            List<PhysicsRayTestResult> results = space.rayTest(getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-0.8f * centerToBottomHeight)),
+                    getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-1.3f * centerToBottomHeight)));
             for (PhysicsRayTestResult physicsRayTestResult : results) {
 
                 if (physicsRayTestResult.getHitFraction() < closestFraction) {
@@ -193,6 +201,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
     }
 
     // DESTROY METHOD
+    @Override
     public void destroy() {
         physicsClosestTest = null;
         walkDirection = null;
@@ -227,7 +236,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
     }
 
     public void jump() {
-        this.doJump = true;
+        doJump = true;
     }
 
     public float getJumpSpeed() {
@@ -235,7 +244,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
     }
 
     public void setJumpSpeed(float jumpSpeed) {
-        this.jumpSpeedY = jumpSpeed;
+        jumpSpeedY = jumpSpeed;
     }
 
     public float getMoveSpeed() {

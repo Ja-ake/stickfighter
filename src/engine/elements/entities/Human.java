@@ -21,12 +21,12 @@ public class Human extends Entity {
     }
 
     public float getMass() {
-        return 1;
+        return 100;
     }
 
     @Override
     protected RigidBodyControl initialCollisionShape() {
-        SimpleCharacterControl scc = new SimpleCharacterControl(appState.getApp(), 2, new CapsuleCollisionShape(.8f, 2), getMass());
+        SimpleCharacterControl scc = new SimpleCharacterControl(appState.getApp(), 2.5f, new CapsuleCollisionShape(.8f, 2.5f), getMass());
 
         scc.setDamping(0.5f, 0.5f);
         scc.setSleepingThresholds(0.7f, 0.7f);
@@ -34,7 +34,7 @@ public class Human extends Entity {
         scc.setAngularFactor(0);
         scc.setMoveSpeed(40);
         scc.setMoveSlopeSpeed(0.3f);
-        scc.setJumpSpeed(40);
+        scc.setJumpSpeed(45);
         scc.setGravity(new Vector3f(0, -100, 0));
 
         return scc;
@@ -42,18 +42,28 @@ public class Human extends Entity {
 
     @Override
     protected Spatial initialSpatial() {
-
+        //Without Lighting
         //Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         //mat.setColor("Color", ColorRGBA.Black);
+        
+        //With Lighting
         Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         mat.setBoolean("UseMaterialColors", true);
         mat.setColor("Diffuse", ColorRGBA.White);
 
+        //Turns this sticky
+//        Texture t = appState.getApp().getAssetManager().loadTexture("Textures/ColorRamp/toon.png");
+//        mat.setTexture("ColorRamp", t);
+//        mat.setColor("Specular", ColorRGBA.Black);
+//        mat.setBoolean("VertexLighting", true);
+
+        //Body
         Node stick = (Node) appState.getApp().getAssetManager().loadModel("Models/Stick/StickMesh.mesh.xml");
         Spatial body = stick.getChild(0);
         body.setMaterial(mat);
         body.setLocalTranslation(0, -3, 0);
 
+        //Head
         Spatial head = ((Node) appState.getApp().getAssetManager().loadModel("Models/Stick/HeadMesh.mesh.xml")).getChild(0);
         head.setMaterial(mat);
         head.setLocalTranslation(0, -3, 0);
