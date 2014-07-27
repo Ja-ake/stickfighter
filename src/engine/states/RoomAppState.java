@@ -47,10 +47,12 @@ public class RoomAppState extends BulletAppState implements State {
         new Player(this, new Vector3f(0, 20, 0));
         
         AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(2f));
+        al.setColor(ColorRGBA.White.mult(4f));
         node.addLight(al);
+        
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(0, -1, 0));
+        sun.setDirection(new Vector3f(1, -1, 1));
+        sun.setColor(ColorRGBA.White.mult(.4f));
         node.addLight(sun);
         
         //Draw physics mesh

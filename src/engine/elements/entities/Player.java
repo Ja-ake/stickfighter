@@ -73,10 +73,12 @@ public class Player extends Human implements AnimEventListener {
         if (moveDir != -1) {
             getControl().setMove(true);
             SphericalCoords newMoveDir;
-            if (Math.abs(moveDir) < 1) {
+            if (Math.abs(moveDir) < .5) {
                 newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI);
+            } else if (Math.abs(moveDir) < 1) {
+                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(.75f);
             } else {
-                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI);
+                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(.5f);
             }
             getControl().setWalkDirection(MathEx.sphericalToRectangular(newMoveDir));
             setAnimation("Run", false);

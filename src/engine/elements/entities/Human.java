@@ -26,12 +26,12 @@ public class Human extends Entity {
 
     @Override
     protected RigidBodyControl initialCollisionShape() {
-        SimpleCharacterControl scc = new SimpleCharacterControl(appState.getApp(), 2, new CapsuleCollisionShape(1, 2), getMass());
+        SimpleCharacterControl scc = new SimpleCharacterControl(appState.getApp(), 2, new CapsuleCollisionShape(.8f, 2), getMass());
 
         scc.setDamping(0.5f, 0.5f);
         scc.setSleepingThresholds(0.7f, 0.7f);
-        scc.setFriction(1);
-        scc.setAngularFactor(0f);
+        scc.setFrictionWalk(.05f);
+        scc.setAngularFactor(0);
         scc.setMoveSpeed(40);
         scc.setMoveSlopeSpeed(0.3f);
         scc.setJumpSpeed(40);
@@ -42,12 +42,24 @@ public class Human extends Entity {
 
     @Override
     protected Spatial initialSpatial() {
-        Node s = (Node) appState.getApp().getAssetManager().loadModel("Models/S/StickMesh.mesh.xml");
-        Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Black);
-        s.getChild("StickMat").setMaterial(mat);
-        s.scale(.5f);
-        s.getChild(0).setLocalTranslation(0, -3, 0);
-        return s;
+
+        //Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        //mat.setColor("Color", ColorRGBA.Black);
+        Material mat = new Material(appState.getApp().getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", ColorRGBA.White);
+
+        Node stick = (Node) appState.getApp().getAssetManager().loadModel("Models/Stick/StickMesh.mesh.xml");
+        Spatial body = stick.getChild(0);
+        body.setMaterial(mat);
+        body.setLocalTranslation(0, -3, 0);
+
+        Spatial head = ((Node) appState.getApp().getAssetManager().loadModel("Models/Stick/HeadMesh.mesh.xml")).getChild(0);
+        head.setMaterial(mat);
+        head.setLocalTranslation(0, -3, 0);
+        stick.attachChild(head);
+
+        stick.scale(.5f);
+        return stick;
     }
 }
