@@ -20,21 +20,29 @@ import java.util.List;
 public class SimpleCharacterControl extends RigidBodyControl implements PhysicsTickListener {
 
     private Application app;
+    //Should you move, should you jump
     private boolean doMove, doJump, hasJumped = false;
+    //The direction to walk
     private Vector3f walkDirection = Vector3f.ZERO;
+    //Add this to the jump, no idea why this isn't part of jumpSpeedY, maybe for X and Z directions?
     private Vector3f additiveJumpSpeed = Vector3f.ZERO;
+    //Temp var used to rotate
     private Quaternion newRotation;
+    //Not completely sure, used to put some limits on stopping and jumping, where the timers tick up to the max
     private int stopTimer, jumpTimer, maxStopTimer, maxJumpTimer;
+    //If you've moved since the last timer update?
     private boolean hasMoved = false;
+    //The angle of the thing you're standing on?
     private float angleNormals = 0;
-    private PhysicsRayTestResult physicsClosestTets;
-
+    //The ray test to below you
+    private PhysicsRayTestResult physicsClosestTest;
+    //Movement constants
     private float jumpSpeedY, moveSpeed, moveSpeedMultiplier, moveSlopeSpeed, slopeLimitAngle, stopDamping, centerToBottomHeight;
     private float frictionWalk, frictionStop, mainWalkInterpolation, otherWalkInterpolation;
 
     public SimpleCharacterControl(Application app, float centerToBottomHeight, CollisionShape colShape, float mass) {
         super(colShape, mass);
-       
+
         this.app = app;
 
         jumpSpeedY = 40f;
@@ -43,27 +51,26 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
         moveSlopeSpeed = 0.3f;
         slopeLimitAngle = FastMath.DEG_TO_RAD * 45f;
         stopDamping = 0.8f;
-       
+
         stopTimer = 0;
         jumpTimer = 0;
         maxStopTimer = 30;
         maxJumpTimer = 20;
-       
+
         frictionWalk = 0.1f;
         frictionStop = 7f;
         mainWalkInterpolation = 0.7f;
         otherWalkInterpolation = 0.9f;
-       
+
         this.centerToBottomHeight = centerToBottomHeight;
 
         this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().addTickListener(this);
     }
 
-   
     @Override
     public void update(float tpf) {
         super.update(tpf);
-       
+
         if (spatial != null && newRotation != null) {
             spatial.setLocalRotation(newRotation);
 //            newRotation = null;
@@ -74,31 +81,27 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
 //    protected void controlRender(RenderManager rm, ViewPort vp) {
 ////        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //    }
-
+    @Override
     public void prePhysicsTick(PhysicsSpace space, float tpf) {
-
-        if (physicsClosestTets != null) {
-            angleNormals = physicsClosestTets.getHitNormalLocal().normalizeLocal().angleBetween(Vector3f.UNIT_Y);
-
+        //No idea what this does
+        if (physicsClosestTest != null) {
+            angleNormals = physicsClosestTest.getHitNormalLocal().normalizeLocal().angleBetween(Vector3f.UNIT_Y);
         }
-
-        if (angleNormals < slopeLimitAngle && physicsClosestTets != null && (!doMove && !doJump && !hasJumped)) {
+        //Set friction, depending on whether you're moving or stopped
+        if (angleNormals < slopeLimitAngle && physicsClosestTest != null && (!doMove && !doJump && !hasJumped)) {
             this.setFriction(frictionStop);
         } else {
             this.setFriction(frictionWalk);
         }
-
+        //If you should move...
         if (doMove) {
-
+            //Calculate the direction in which to apply force
             Vector3f moveCharVec = walkDirection.mult(moveSpeed * moveSpeedMultiplier);
             moveCharVec.setY(this.getLinearVelocity().getY());
-
-            if ((angleNormals < slopeLimitAngle && physicsClosestTets != null) || !this.isActive()) {
-
+            //No idea what this does
+            if ((angleNormals < slopeLimitAngle && physicsClosestTest != null) || !this.isActive()) {
                 this.setLinearVelocity(moveCharVec.interpolate(this.getLinearVelocity(), mainWalkInterpolation));
-
-
-            } else if (angleNormals > slopeLimitAngle && angleNormals < FastMath.DEG_TO_RAD * 80f && physicsClosestTets != null) {
+            } else if (angleNormals > slopeLimitAngle && angleNormals < FastMath.DEG_TO_RAD * 80f && physicsClosestTest != null) {
                 this.applyCentralForce((walkDirection.mult(moveSlopeSpeed).setY(0f)));
 //                this.setLinearVelocity(moveCharVec.interpolate(this.getLinearVelocity(), 0.99f));
             } else {
@@ -106,11 +109,11 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
 //                this.setLinearVelocity(moveCharVec.setY(this.getLinearVelocity().getY()));
                 this.setLinearVelocity(moveCharVec.interpolate(this.getLinearVelocity(), otherWalkInterpolation));
             }
+            //Update variables
             hasMoved = true;
             hasJumped = false;
             stopTimer = 0;
             jumpTimer = 0;
-
         }
 
         if (jumpTimer > 0) {
@@ -121,7 +124,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
             }
         }
 
-        if (doJump && !hasJumped && (physicsClosestTets != null || !this.isActive())) {
+        if (doJump && !hasJumped && (physicsClosestTest != null || !this.isActive())) {
             if ((angleNormals < slopeLimitAngle)) {
 //                this.clearForces();
                 this.setLinearVelocity(this.getLinearVelocity().add(Vector3f.UNIT_Y.clone().multLocal(jumpSpeedY).addLocal(additiveJumpSpeed)));
@@ -133,7 +136,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
 
 
         // Stop the char
-        if ((hasMoved || hasJumped) && physicsClosestTets != null && angleNormals < slopeLimitAngle && !doMove) {
+        if ((hasMoved || hasJumped) && physicsClosestTest != null && angleNormals < slopeLimitAngle && !doMove) {
 
             if (hasJumped && hasMoved) {
                 hasJumped = false;
@@ -168,7 +171,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
     }
 
     public void physicsTick(PhysicsSpace space, float tpf) {
-        physicsClosestTets = null;
+        physicsClosestTest = null;
         angleNormals = 0f;
         float closestFraction = centerToBottomHeight * 10f;
 
@@ -177,10 +180,13 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
                     this.getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-1.3f * centerToBottomHeight)));
             for (PhysicsRayTestResult physicsRayTestResult : results) {
 
-                if (physicsRayTestResult.getHitFraction() < closestFraction && !physicsRayTestResult.getCollisionObject().getUserObject().equals(spatial)
-                        && physicsRayTestResult.getCollisionObject() instanceof GhostControl == false) {
-                    physicsClosestTets = physicsRayTestResult;
-                    closestFraction = physicsRayTestResult.getHitFraction();
+                if (physicsRayTestResult.getHitFraction() < closestFraction) {
+                    if (!spatial.equals(physicsRayTestResult.getCollisionObject().getUserObject())) {
+                        if (physicsRayTestResult.getCollisionObject() instanceof GhostControl == false) {
+                            physicsClosestTest = physicsRayTestResult;
+                            closestFraction = physicsRayTestResult.getHitFraction();
+                        }
+                    }
                 }
             }
         }
@@ -188,12 +194,12 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
 
     // DESTROY METHOD
     public void destroy() {
-        physicsClosestTets = null;
+        physicsClosestTest = null;
         walkDirection = null;
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().removeTickListener(this);
 //        spatial.removeControl(this);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().remove(this);
-       
+
         app = null;
         spatial.removeControl(this);
 //        this = null;
@@ -220,7 +226,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
         this.doMove = doMove;
     }
 
-    public void setJump() {
+    public void jump() {
         this.doJump = true;
     }
 
@@ -327,6 +333,4 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
     public void setMaxJumpTimer(int maxJumpTimer) {
         this.maxJumpTimer = maxJumpTimer;
     }
-   
 }
-

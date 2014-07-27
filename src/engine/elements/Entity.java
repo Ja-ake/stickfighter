@@ -3,7 +3,7 @@
  */
 package engine.elements;
 
-import com.jme3.bullet.control.PhysicsControl;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import engine.Element;
@@ -15,7 +15,7 @@ public abstract class Entity extends Element {
 
     protected RoomAppState appState;
     protected Spatial spatial;
-    protected PhysicsControl physicsControl;
+    protected RigidBodyControl physicsControl;
 
     public Entity(RoomAppState appState, Vector3f position) {
         //Variables
@@ -44,9 +44,11 @@ public abstract class Entity extends Element {
         return spatial.getLocalTranslation();
     }
 
-    public abstract Vector3f getVelocity();
+    public Vector3f getVelocity() {
+        return physicsControl.getLinearVelocity();
+    }
 
-    abstract protected PhysicsControl initialCollisionShape();
+    abstract protected RigidBodyControl initialCollisionShape();
 
     abstract protected Spatial initialSpatial();
 
@@ -62,13 +64,17 @@ public abstract class Entity extends Element {
         setSpeed(speed);
     }
 
-    public abstract void setPosition(Vector3f newPosition);
+    public void setPosition(Vector3f newPosition) {
+        physicsControl.setPhysicsLocation(newPosition);
+    }
 
     public void setSpeed(float newSpeed) {
         setVelocity(getVelocity().normalize().mult(newSpeed));
     }
 
-    public abstract void setVelocity(Vector3f newVelocity);
+    public void setVelocity(Vector3f newVelocity) {
+        physicsControl.setLinearVelocity(newVelocity);
+    }
 
     @Override
     public void update(float tpf) {

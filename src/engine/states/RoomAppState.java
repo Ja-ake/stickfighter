@@ -52,6 +52,9 @@ public class RoomAppState extends BulletAppState implements State {
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(0, -1, 0));
         node.addLight(sun);
+        
+        //Draw physics mesh
+        //getPhysicsSpace().enableDebug(getApp().getAssetManager());
     }
     
     @Override

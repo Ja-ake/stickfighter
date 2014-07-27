@@ -8,6 +8,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import engine.states.RoomAppState;
 import engine.util.SphericalCoords;
@@ -17,15 +18,12 @@ public class Player extends Human implements AnimEventListener {
 
     private AnimControl animControl;
     private AnimChannel animChannel;
-    private float runSpeed;
+    private SphericalCoords facing;
 
     public Player(RoomAppState appState, Vector3f position) {
         super(appState, position);
-        runSpeed = 20;
 
-        getBCC().setViewDirection(new Vector3f(1, 0, 0));
-        getBCC().setGravity(new Vector3f(0, -100, 0));
-        getBCC().setJumpForce(new Vector3f(0, 50 * getMass(), 0));
+        facing = new SphericalCoords(1, 0, FastMath.HALF_PI);
 
         animControl = spatial.getControl(AnimControl.class);
         animControl.addListener(this);
@@ -35,7 +33,7 @@ public class Player extends Human implements AnimEventListener {
     }
 
     public SphericalCoords getFacing() {
-        return MathEx.rectangularToSpherical(getBCC().getViewDirection());
+        return facing;
     }
 
     public float getMoveDirection() {
@@ -71,24 +69,27 @@ public class Player extends Human implements AnimEventListener {
     public void move(float tpf) {
         float moveDir = getMoveDirection();
         //Move
+        getControl().setMove(moveDir != -1);
         if (moveDir != -1) {
+            getControl().setMove(true);
             SphericalCoords newMoveDir;
             if (Math.abs(moveDir) < 1) {
-                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(runSpeed);
+                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI);
             } else {
-                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI).setR(runSpeed / 2);
+                newMoveDir = getFacing().addT(moveDir).setP(FastMath.HALF_PI);
             }
-            getBCC().setWalkDirection(MathEx.sphericalToRectangular(newMoveDir));
+            getControl().setWalkDirection(MathEx.sphericalToRectangular(newMoveDir));
             setAnimation("Run", false);
         } else {
-            getBCC().setWalkDirection(new Vector3f(0, 0, 0));
+            getControl().setMove(false);
+            getControl().setWalkDirection(new Vector3f(0, 0, 0));
             setAnimation("Stand", false);
         }
         //Jump
         //if (getBCC().isOnGround()) {
-            if (appState.getInputPacket().isPressed("Jump")) {
-                getBCC().jump();
-            }
+        if (appState.getInputPacket().isPressed("Jump")) {
+            getControl().jump();
+        }
         //}
     }
 
@@ -107,12 +108,16 @@ public class Player extends Human implements AnimEventListener {
     }
 
     public void setFacing(SphericalCoords s) {
-        getBCC().setViewDirection(MathEx.sphericalToRectangular(s));
+        facing = s;
     }
 
     @Override
     public void update(float tpf) {
         move(tpf);
+
+        getControl().setGravity(new Vector3f(0, -100, 0));
+
+        getControl().setRotationInUpdate(new Quaternion().fromAngleAxis(-facing.t + FastMath.HALF_PI, Vector3f.UNIT_Y));
 
         //Turn View
         setFacing(getFacing().addP(-appState.getInputPacket().getValue("Look Up")));
