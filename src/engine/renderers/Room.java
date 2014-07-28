@@ -28,6 +28,7 @@ public class Room extends Renderer {
         appState.getApp().getAssetManager().registerLocator("town.zip", ZipLocator.class);
         levelModel = (Node) appState.getApp().getAssetManager().loadModel(levelName);
         appState.getNode().attachChild(levelModel);
+        
         CollisionShape levelShape = CollisionShapeFactory.createMeshShape(levelModel);
         RigidBodyControl phys = new RigidBodyControl(levelShape, 0);
         appState.getPhysicsSpace().add(phys);

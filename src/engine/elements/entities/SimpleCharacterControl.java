@@ -59,7 +59,7 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
         maxJumpTimer = 20;
 
         frictionWalk = 0.1f;
-        frictionStop = 7f;
+        frictionStop = 10f;
         mainWalkInterpolation = 0.7f;
         otherWalkInterpolation = 0.9f;
 
@@ -184,8 +184,8 @@ public class SimpleCharacterControl extends RigidBodyControl implements PhysicsT
         float closestFraction = centerToBottomHeight * 10f;
 
         if (isActive()) {
-            List<PhysicsRayTestResult> results = space.rayTest(getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-0.8f * centerToBottomHeight)),
-                    getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-1.3f * centerToBottomHeight)));
+            List<PhysicsRayTestResult> results = space.rayTest(getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-0.5f * centerToBottomHeight)),
+                    getPhysicsLocation().add(Vector3f.UNIT_Y.mult(-1.5f * centerToBottomHeight)));
             for (PhysicsRayTestResult physicsRayTestResult : results) {
 
                 if (physicsRayTestResult.getHitFraction() < closestFraction) {

@@ -26,11 +26,10 @@ public class Human extends Entity {
 
     @Override
     protected RigidBodyControl initialCollisionShape() {
-        SimpleCharacterControl scc = new SimpleCharacterControl(appState.getApp(), 2.5f, new CapsuleCollisionShape(.8f, 2.5f), getMass());
+        SimpleCharacterControl scc = new SimpleCharacterControl(appState.getApp(), 2f, new CapsuleCollisionShape(.8f, 2f), getMass());
 
         scc.setDamping(0.5f, 0.5f);
         scc.setSleepingThresholds(0.7f, 0.7f);
-        scc.setFrictionWalk(.2f);
         scc.setAngularFactor(0);
         scc.setMoveSpeed(40);
         scc.setMoveSlopeSpeed(0.3f);
@@ -61,12 +60,12 @@ public class Human extends Entity {
         Node stick = (Node) appState.getApp().getAssetManager().loadModel("Models/Stick/StickMesh.mesh.xml");
         Spatial body = stick.getChild(0);
         body.setMaterial(mat);
-        body.setLocalTranslation(0, -3, 0);
+        body.setLocalTranslation(0, -3.5f, 0);
 
         //Head
         Spatial head = ((Node) appState.getApp().getAssetManager().loadModel("Models/Stick/HeadMesh.mesh.xml")).getChild(0);
         head.setMaterial(mat);
-        head.setLocalTranslation(0, -3, 0);
+        head.setLocalTranslation(0, -3.5f, 0);
         stick.attachChild(head);
 
         stick.scale(.5f);

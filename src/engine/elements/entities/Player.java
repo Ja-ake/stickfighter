@@ -39,27 +39,32 @@ public class Player extends Human implements AnimEventListener {
     public float getMoveDirection() {
         //Calculate Move Direction based on keyboard input
         //Returns -1 if no keys are pressed
-        if (appState.getInputPacket().isDown("Move Forward")) {
-            if (appState.getInputPacket().isDown("Move Right")) {
-                return FastMath.QUARTER_PI;
-            } else if (appState.getInputPacket().isDown("Move Left")) {
+        boolean up = appState.getInputPacket().isDown("Move Forward");
+        boolean down = appState.getInputPacket().isDown("Move Back");
+        boolean left = appState.getInputPacket().isDown("Move Left");
+        boolean right = appState.getInputPacket().isDown("Move Right");
+
+        if (up && !down) {
+            if (left && !right) {
                 return -FastMath.QUARTER_PI;
+            } else if (right && !left) {
+                return FastMath.QUARTER_PI;
             } else {
                 return 0;
             }
-        } else if (appState.getInputPacket().isDown("Move Back")) {
-            if (appState.getInputPacket().isDown("Move Right")) {
-                return FastMath.PI - FastMath.QUARTER_PI;
-            } else if (appState.getInputPacket().isDown("Move Left")) {
+        } else if (down && !up) {
+            if (left && !right) {
                 return FastMath.QUARTER_PI - FastMath.PI;
+            } else if (right && !left) {
+                return FastMath.PI - FastMath.QUARTER_PI;
             } else {
                 return FastMath.PI;
             }
         } else {
-            if (appState.getInputPacket().isDown("Move Right")) {
-                return FastMath.HALF_PI;
-            } else if (appState.getInputPacket().isDown("Move Left")) {
+            if (left && !right) {
                 return -FastMath.HALF_PI;
+            } else if (right && !left) {
+                return FastMath.HALF_PI;
             } else {
                 return -1;
             }
@@ -118,7 +123,6 @@ public class Player extends Human implements AnimEventListener {
         move(tpf);
 
         getControl().setGravity(new Vector3f(0, -100, 0));
-
         getControl().setRotationInUpdate(new Quaternion().fromAngleAxis(-facing.t + FastMath.HALF_PI, Vector3f.UNIT_Y));
 
         //Turn View

@@ -13,7 +13,10 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.CartoonEdgeFilter;
 import com.jme3.renderer.Caps;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+import com.jme3.shadow.DirectionalLightShadowFilter;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 import engine.GameControl;
 import engine.InputPacket;
 import java.util.ArrayList;
@@ -54,14 +57,31 @@ public class RoomAppState extends BulletAppState implements State {
     }
 
     private void createLighting() {
+        //Ambient
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(4f));
         node.addLight(al);
 
+        //Sun
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(1, -1, 1));
         sun.setColor(ColorRGBA.White.mult(.4f));
         node.addLight(sun);
+
+        //Shadows
+        int shadowMapSize = 1024 * 8;
+        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getApp().getAssetManager(), shadowMapSize, 3);
+        dlsr.setLight(sun);
+        getApp().getViewPort().addProcessor(dlsr);
+
+        DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(getApp().getAssetManager(), shadowMapSize, 3);
+        dlsf.setLight(sun);
+        dlsf.setEnabled(true);
+        FilterPostProcessor fpp = new FilterPostProcessor(getApp().getAssetManager());
+        fpp.addFilter(dlsf);
+        getApp().getViewPort().addProcessor(fpp);
+
+        //node.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
     }
 
     @Override
@@ -79,7 +99,7 @@ public class RoomAppState extends BulletAppState implements State {
         createFilters();
 
         //Draw physics mesh
-//        getPhysicsSpace().enableDebug(getApp().getAssetManager());
+        //getPhysicsSpace().enableDebug(getApp().getAssetManager());
     }
 
     @Override
