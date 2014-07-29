@@ -21,7 +21,7 @@ public class Human extends Entity {
     }
 
     public float getMass() {
-        return 100;
+        return 10000;
     }
 
     @Override

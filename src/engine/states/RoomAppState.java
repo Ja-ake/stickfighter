@@ -64,7 +64,7 @@ public class RoomAppState extends BulletAppState implements State {
 
         //Sun
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(1, -1, 1));
+        sun.setDirection(new Vector3f(2, -1, 1));
         sun.setColor(ColorRGBA.White.mult(.4f));
         node.addLight(sun);
 
@@ -81,7 +81,7 @@ public class RoomAppState extends BulletAppState implements State {
         fpp.addFilter(dlsf);
         getApp().getViewPort().addProcessor(fpp);
 
-        //node.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        node.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
     }
 
     @Override
